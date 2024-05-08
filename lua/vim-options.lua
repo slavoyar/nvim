@@ -1,15 +1,14 @@
 HOME = os.getenv("HOME")
 
-vim.g.mapleader = ' '
-vim.g.NERDTreeShowHidden = 1
-
+vim.g.mapleader = " "
+vim.g.background = "light"
 
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.autoindent = true
 vim.opt.expandtab = true
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
 
 vim.opt.showmatch = true
 vim.opt.ignorecase = true
@@ -27,5 +26,13 @@ vim.opt.directory = '/.vim/tmp/swap//'   -- swap files
 vim.opt.clipboard = 'unnamedplus'
 
 vim.opt.guifont = "JetBrainsMono Nerd Font:h11"
-vim.cmd('colorscheme vscode')
+
+-- Navigate vim panes better
+vim.keymap.set('n', '<c-k>', ':wincmd k<CR>')
+vim.keymap.set('n', '<c-j>', ':wincmd j<CR>')
+vim.keymap.set('n', '<c-h>', ':wincmd h<CR>')
+vim.keymap.set('n', '<c-l>', ':wincmd l<CR>')
+
+vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
+vim.wo.number = true
 
