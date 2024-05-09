@@ -23,7 +23,7 @@ vim.opt.undodir = HOME .. '/.vim/tmp/undo//'     -- undo files
 vim.opt.backupdir = HOME .. '/.vim/tmp/backup//' -- backups
 vim.opt.directory = '/.vim/tmp/swap//'   -- swap files
 
-vim.opt.clipboard = 'unnamedplus'
+vim.opt.clipboard = "unnamedplus"
 
 vim.opt.guifont = "JetBrainsMono Nerd Font:h11"
 
