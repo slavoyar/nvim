@@ -16,12 +16,12 @@ vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 -- Backup files
-vim.opt.backup = true -- use backup files
+vim.opt.backup = true                            -- use backup files
 vim.opt.writebackup = false
-vim.opt.swapfile = false -- do not use swap file
+vim.opt.swapfile = false                         -- do not use swap file
 vim.opt.undodir = HOME .. '/.vim/tmp/undo//'     -- undo files
 vim.opt.backupdir = HOME .. '/.vim/tmp/backup//' -- backups
-vim.opt.directory = '/.vim/tmp/swap//'   -- swap files
+vim.opt.directory = '/.vim/tmp/swap//'           -- swap files
 
 vim.opt.clipboard = "unnamedplus"
 
@@ -37,3 +37,10 @@ vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
 vim.keymap.set('i', 'jk', '<ESC>', {})
 vim.wo.number = true
 
+-- Key mappings for debugging (optional)
+vim.api.nvim_set_keymap('n', '<F5>', '<cmd>lua require("dap").continue()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<F10>', '<cmd>lua require("dap").step_over()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<F11>', '<cmd>lua require("dap").step_into()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<F12>', '<cmd>lua require("dap").step_out()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>b', '<cmd>lua require("dap").toggle_breakpoint()<CR>',
+  { noremap = true, silent = true })
