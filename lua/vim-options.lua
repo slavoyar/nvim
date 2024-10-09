@@ -44,3 +44,5 @@ vim.api.nvim_set_keymap('n', '<F11>', '<cmd>lua require("dap").step_into()<CR>',
 vim.api.nvim_set_keymap('n', '<F12>', '<cmd>lua require("dap").step_out()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>b', '<cmd>lua require("dap").toggle_breakpoint()<CR>',
   { noremap = true, silent = true })
+
+vim.keymap.set('n', '<leader>i', '<cmd>lua vim.diagnostic.open_float()<CR>')
