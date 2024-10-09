@@ -8,10 +8,20 @@ return {
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    lazy = false,
     opts = {
       auto_install = true,
     },
+    ensure_installed = {
+      "lua_ls",
+      "prettierd",
+      "eslint_d",
+      "ts_ls",
+      "volar",
+      "ast_grep",
+      "stylua",
+      "tailwind_css",
+      "cssls",
+    }
   },
   {
     "neovim/nvim-lspconfig",
