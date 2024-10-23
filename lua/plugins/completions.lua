@@ -1,19 +1,21 @@
 return {
   {
-    "hrsh7th/cmp-nvim-lsp"
-  },
-  {
-    "L3MON4D3/LuaSnip",
-    dependencies = {
-      "saadparwaiz1/cmp_luasnip",
-      "rafamadriz/friendly-snippets",
-    },
+    'Exafunction/codeium.vim',
+    event = 'BufEnter'
   },
   {
     "hrsh7th/nvim-cmp",
+    dependencies = {
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-path',
+      'saadparwaiz1/cmp_luasnip',
+      "rafamadriz/friendly-snippets",
+      "L3MON4D3/LuaSnip",
+    },
     config = function()
       local cmp = require("cmp")
-      local select_opts = {behavior = cmp.SelectBehavior.Select}
+      local select_opts = { behavior = cmp.SelectBehavior.Select }
       require("luasnip.loaders.from_vscode").lazy_load()
 
       cmp.setup({
@@ -48,7 +50,7 @@ return {
             else
               fallback()
             end
-          end, {'i', 's'}),
+          end, { 'i', 's' }),
         }),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },

@@ -11,17 +11,6 @@ return {
     opts = {
       auto_install = true,
     },
-    ensure_installed = {
-      "lua_ls",
-      "prettierd",
-      "eslint_d",
-      "ts_ls",
-      "volar",
-      "ast_grep",
-      "stylua",
-      "tailwind_css",
-      "cssls",
-    }
   },
   {
     "neovim/nvim-lspconfig",
@@ -43,7 +32,8 @@ return {
         capabilities = capabilities
       })
       lspconfig.tailwindcss.setup({
-        capabilities = capabilities
+        capabilities = capabilities,
+        filetypes = { "html", "css", "scss", "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" }
       })
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
