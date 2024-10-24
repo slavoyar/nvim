@@ -3,6 +3,7 @@ return {
     "nvim-neotest/neotest",
     dependencies = {
       "nvim-neotest/nvim-nio",
+      "nvim-neotest/neotest-jest",
       "nvim-lua/plenary.nvim",
       "antoinemadec/FixCursorHold.nvim",
       "nvim-treesitter/nvim-treesitter"
@@ -11,11 +12,15 @@ return {
       require('neotest').setup({
         adapters = {
           require('neotest-jest')({
-            jestCommand = "npm run jest",
-            env = { CI = true },
-            cwd = function(path)
-              return vim.fn.getcwd()
-            end,
+            dap = {
+              type = 'pwa-node',
+              request = 'launch',
+              args = '--runInBand',
+              cwd = vim.fn.getcwd(),
+              console = 'intergratedTerminal',
+              sourceMaps = true,
+              protocol = 'inspector',
+            }
           }),
         }
       })

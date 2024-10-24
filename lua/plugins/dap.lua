@@ -19,23 +19,30 @@ return {
       end
 
       -- Node.js adapter configuration
-      dap.adapters.node2 = {
-        type = 'executable',
-        command = 'node',
-        args = {
-          require('mason-registry')
-          .get_package("js-debug-adapter")
-          :get_install_path() .. "/js-debug/src/dapDebugServer.js"
-        },
+      dap.adapters['pwa-node'] = {
+        type = 'server',
+        host = 'localhost',
+        port = 9229,
+        executable = {
+          command = 'node',
+          args = {
+            require('mason-registry')
+            .get_package("js-debug-adapter")
+            :get_install_path() .. "/js-debug/src/dapDebugServer.js",
+            '9229'
+          },
+        }
       }
 
       -- Configuration for launching Node.js
       dap.configurations.typescript = {
         {
-          type = 'node2',
+          type = 'pwa-node',
           request = 'launch',
           name = 'Launch TypeScript Program',
-          program = '${workspaceFolder}/src/index.ts', -- Point to src/index.ts
+          program = function ()
+            return '${file}'
+          end, -- Point to src/index.ts
           cwd = get_project_root(),                    -- Automatically set the project root as cwd
           sourceMaps = true,
           protocol = 'inspector',
@@ -46,7 +53,7 @@ return {
           skipFiles = { '<node_internals>/**' },
         },
         {
-          type = 'node2',
+          type = 'pwa-node',
           request = 'attach',
           name = 'Attach to Process',
           processId = require('dap.utils').pick_process,
