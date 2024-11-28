@@ -9,8 +9,16 @@ return {
   {
     "williamboman/mason-lspconfig.nvim",
     opts = {
-      auto_install = true,
-    },
+      automatic_installation = true,
+      ensure_installed = {
+        "lua_ls",
+        "ts_ls",
+        "volar",
+        "cssls",
+        "tailwindcss",
+        "ast_grep"
+      }
+    }
   },
   {
     "neovim/nvim-lspconfig",
@@ -19,7 +27,7 @@ return {
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
       local mason_registry = require('mason-registry')
       local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() ..
-      '/node_modules/@vue/language-server'
+          '/node_modules/@vue/language-server'
 
       local lspconfig = require("lspconfig")
       lspconfig.ts_ls.setup({
