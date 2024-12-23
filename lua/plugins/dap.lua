@@ -4,6 +4,8 @@ return {
     config = function()
       local dap = require('dap')
 
+      dap.set_log_level('DEBUG')
+
       local function get_project_root()
         local cwd = vim.fn.getcwd()
         local root_files = { 'package.json', 'tsconfig.json', '.git' }
@@ -30,8 +32,18 @@ return {
             .get_package("js-debug-adapter")
             :get_install_path() .. "/js-debug/src/dapDebugServer.js",
             '9229'
-          },
+          }
         }
+      }
+
+      dap.adapters['chrome'] = {
+        type = 'executable',
+          command = 'node',
+          args = {
+            require('mason-registry')
+            .get_package("chrome-debug-adapter")
+            :get_install_path() .. "/out/src/chromeDebug.js"
+          }
       }
 
       -- Configuration for launching Node.js
@@ -51,6 +63,19 @@ return {
           runtimeArgs = { '-r', 'ts-node/register', '--project', '${workspaceFolder}/tsconfig.json' }, -- Use the specific tsconfig.json
           logLevel = 'debug',
           skipFiles = { '<node_internals>/**' },
+        },
+        {
+          type = "chrome",
+          request = "attach",
+          program = "${file}",
+          cwd = get_project_root(),                    -- Automatically set the project root as cwd
+          name = "Attach Chrome",
+          url = "http://localhost:5173",
+          sourceMaps = true,
+          protocol = "inspector",
+          logLevel = 'debug',
+          webRoot = '${workspaceFolder}',
+          port = 9222
         },
         {
           type = 'pwa-node',
