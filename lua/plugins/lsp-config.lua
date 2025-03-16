@@ -13,6 +13,7 @@ return {
 			ensure_installed = {
 				"lua_ls",
 				"ts_ls",
+				"prismals",
 				"volar",
 				"cssls",
 				"tailwindcss",
@@ -53,9 +54,8 @@ return {
 				capabilities = capabilities,
 				filetypes = { "html", "css", "scss", "javascriptreact", "typescript", "typescriptreact", "vue" },
 			})
-			lspconfig.eslint.setup({
+			lspconfig.prismals.setup({
 				capabilities = capabilities,
-				filetypes = { "javascript", "javascriptreact" },
 			})
 			lspconfig.volar.setup({
 				capabilities = capabilities,
