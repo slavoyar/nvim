@@ -26,41 +26,38 @@ return {
 		lazy = false,
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			local mason_registry = require("mason-registry")
-			local vue_language_server_path = mason_registry.get_package("vue-language-server"):get_install_path()
-				.. "/node_modules/@vue/language-server"
-
 			local lspconfig = require("lspconfig")
+
+			-- Define the path to the @vue/typescript-plugin
+			local vue_typescript_plugin_path = vim.fn.stdpath("data")
+				.. "/mason/packages/vue-language-server/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin"
+
+			-- Setup TypeScript server with Vue plugin
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
 				init_options = {
 					plugins = {
 						{
 							name = "@vue/typescript-plugin",
-							location = vue_language_server_path,
+							location = vue_typescript_plugin_path,
 							languages = { "vue" },
 						},
 					},
 				},
 				filetypes = { "typescript", "typescriptreact", "vue" },
 			})
-			lspconfig.html.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.lua_ls.setup({
-				capabilities = capabilities,
-			})
+
+			-- Setup other language servers
+			lspconfig.html.setup({ capabilities = capabilities })
+			lspconfig.lua_ls.setup({ capabilities = capabilities })
 			lspconfig.tailwindcss.setup({
 				capabilities = capabilities,
 				filetypes = { "html", "css", "scss", "javascriptreact", "typescript", "typescriptreact", "vue" },
 			})
-			lspconfig.prismals.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.volar.setup({
-				capabilities = capabilities,
-			})
+			lspconfig.prismals.setup({ capabilities = capabilities })
+			lspconfig.volar.setup({ capabilities = capabilities })
 
+			-- Key mappings for LSP functions
 			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
 			vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
 			vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
