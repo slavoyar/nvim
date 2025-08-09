@@ -1,22 +1,3 @@
-local prompts = {
-	-- Code related prompts
-	Explain = "Please explain how the following code works.",
-	Review = "Please review the following code and provide suggestions for improvement.",
-	Tests = "Please explain how the selected code works, then generate unit tests for it.",
-	Refactor = "Please refactor the following code to improve its clarity and readability.",
-	FixCode = "Please fix the following code to make it work as intended.",
-	FixError = "Please explain the error in the following text and provide a solution.",
-	BetterNamings = "Please provide better names for the following variables and functions.",
-	Documentation = "Please provide documentation for the following code.",
-	SwaggerApiDocs = "Please provide documentation for the following API using Swagger.",
-	SwaggerJsDocs = "Please write JSDoc for the following API using Swagger.",
-	-- Text related prompts
-	Summarize = "Please summarize the following text.",
-	Spelling = "Please correct any grammar and spelling errors in the following text.",
-	Wording = "Please improve the grammar and wording of the following text.",
-	Concise = "Please rewrite the following text to make it more concise.",
-}
-
 return {
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
@@ -34,94 +15,51 @@ return {
 		},
 		config = function()
 			local chat = require("CopilotChat")
+
+			local provider_cfg = require("CopilotChat.config").providers
+			provider_cfg.openrouter = {
+				prepare_input = require("CopilotChat.config.providers").copilot.prepare_input,
+				prepare_output = require("CopilotChat.config.providers").copilot.prepare_output,
+				get_headers = function()
+					local api_key = assert(os.getenv("OPENROUTER_API_KEY"), "OPENROUTER_API_KEY env not set")
+					return {
+						Authorization = "Bearer " .. api_key,
+						["Content-Type"] = "application/json",
+					}
+				end,
+				get_models = function(headers)
+					local response, err = require("CopilotChat.utils").curl_get("https://openrouter.ai/api/v1/models", {
+						headers = headers,
+						json_response = true,
+					})
+					if err then
+						error(err)
+					end
+					return vim.iter(response.body.data)
+						:map(function(model)
+							return { id = model.id, name = model.name }
+						end)
+						:totable()
+				end,
+				get_url = function()
+					return "https://openrouter.ai/api/v1/chat/completions"
+				end,
+			}
+
+			local select = require("CopilotChat.select")
+
 			chat.setup({
 				question_header = "## User ",
 				answer_header = "## Copilot ",
 				error_header = "## Error ",
-				prompts = prompts,
-				model = "deepseek-r1:latest",
-				providers = {
-					ollama = {
-						prepare_input = require("CopilotChat.config.providers").copilot.prepare_input,
-						prepare_output = require("CopilotChat.config.providers").copilot.prepare_output,
-
-						get_models = function(headers)
-							local response, err =
-								require("CopilotChat.utils").curl_get("http://localhost:11434/v1/models", {
-									headers = headers,
-									json_response = true,
-								})
-
-							if err then
-								error(err)
-							end
-
-							return vim.tbl_map(function(model)
-								return {
-									id = model.id,
-									name = model.id,
-								}
-							end, response.body.data)
-						end,
-
-						embed = function(inputs, headers)
-							local response, err =
-								require("CopilotChat.utils").curl_post("http://localhost:11434/v1/embeddings", {
-									headers = headers,
-									json_request = true,
-									json_response = true,
-									body = {
-										input = inputs,
-										model = "deepseek-r1:latest",
-									},
-								})
-
-							if err then
-								error(err)
-							end
-
-							return response.body.data
-						end,
-
-						get_url = function()
-							return "http://localhost:11434/v1/chat/completions"
-						end,
-					},
-				},
-				mappings = {
-					-- Use tab for completion
-					complete = {
-						detail = "Use @<Tab> or /<Tab> for options.",
-						insert = "<Tab>",
-					},
-					-- Close the chat
-					close = {
-						normal = "q",
-						insert = "<C-c>",
-					},
-					-- Reset the chat buffer
-					reset = {
-						normal = "<C-x>",
-						insert = "<C-x>",
-					},
-					-- Submit the prompt to Copilot
-					submit_prompt = {
-						normal = "<CR>",
-						insert = "<C-CR>",
-					},
-					-- Accept the diff
-					accept_diff = {
-						normal = "<C-y>",
-						insert = "<C-y>",
-					},
-					-- Show help
-					show_help = {
-						normal = "g?",
-					},
+				model = "qwen/qwen3-30b-a3b:free",
+				providers = require("CopilotChat.config").providers,
+				window = {
+					layout = "vertical",
+					width = 0.3,
 				},
 			})
 
-			local select = require("CopilotChat.select")
 			vim.api.nvim_create_user_command("CopilotChatVisual", function(args)
 				chat.ask(args.args, { selection = select.visual })
 			end, { nargs = "*", range = true })
@@ -162,26 +100,6 @@ return {
 		end,
 		event = "VeryLazy",
 		keys = {
-			-- Show prompts actions with telescope
-			{
-				"<leader>ap",
-				function()
-					require("CopilotChat").select_prompt({
-						context = {
-							"buffers",
-						},
-					})
-				end,
-				desc = "CopilotChat - Prompt actions",
-			},
-			{
-				"<leader>ap",
-				function()
-					require("CopilotChat").select_prompt()
-				end,
-				mode = "x",
-				desc = "CopilotChat - Prompt actions",
-			},
 			-- Code related commands
 			{ "<leader>ae", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
 			{ "<leader>at", "<cmd>CopilotChatTests<cr>", desc = "CopilotChat - Generate tests" },
@@ -196,14 +114,14 @@ return {
 				desc = "CopilotChat - Open in vertical split",
 			},
 			{
-				"<leader>ax",
+				"<leader>ai",
 				":CopilotChatInline",
 				mode = "x",
 				desc = "CopilotChat - Inline chat",
 			},
 			-- Custom input for CopilotChat
 			{
-				"<leader>ai",
+				"<leader>ac",
 				function()
 					local input = vim.fn.input("Ask Copilot: ")
 					if input ~= "" then
@@ -218,17 +136,6 @@ return {
 				"<cmd>CopilotChatCommit<cr>",
 				desc = "CopilotChat - Generate commit message for all changes",
 			},
-			-- Quick chat with Copilot
-			{
-				"<leader>aq",
-				function()
-					local input = vim.fn.input("Quick Chat: ")
-					if input ~= "" then
-						vim.cmd("CopilotChatBuffer " .. input)
-					end
-				end,
-				desc = "CopilotChat - Quick chat",
-			},
 			-- Fix the issue with diagnostic
 			{ "<leader>af", "<cmd>CopilotChatFixError<cr>", desc = "CopilotChat - Fix Diagnostic" },
 			-- Clear buffer and chat history
@@ -237,8 +144,6 @@ return {
 			{ "<leader>av", "<cmd>CopilotChatToggle<cr>", desc = "CopilotChat - Toggle" },
 			-- Copilot Chat Models
 			{ "<leader>a?", "<cmd>CopilotChatModels<cr>", desc = "CopilotChat - Select Models" },
-			-- Copilot Chat Agents
-			{ "<leader>aa", "<cmd>CopilotChatAgents<cr>", desc = "CopilotChat - Select Agents" },
 		},
 	},
 }

@@ -1,3 +1,5 @@
+vim.g.copilot_no_tab_map = true
+
 return {
 	{
 		"saecki/live-rename.nvim",
@@ -7,22 +9,32 @@ return {
 		end,
 	},
 	{
-		"Exafunction/codeium.vim",
-		event = "BufEnter",
+		"zbirenbaum/copilot.lua",
+		event = "InsertEnter",
 		config = function()
-			vim.g.codeium_no_map_tab = 1
-			vim.keymap.set("i", "<C-g>", function()
-				return vim.fn["codeium#Accept"]()
-			end, { expr = true, silent = true })
-			vim.keymap.set("i", "<c-;>", function()
-				return vim.fn["codeium#CycleCompletions"](1)
-			end, { expr = true, silent = true })
-			vim.keymap.set("i", "<c-,>", function()
-				return vim.fn["codeium#CycleCompletions"](-1)
-			end, { expr = true, silent = true })
-			vim.keymap.set("i", "<c-x>", function()
-				return vim.fn["codeium#Clear"]()
-			end, { expr = true, silent = true })
+			require("copilot").setup({
+				suggestion = {
+					enabled = true,
+					auto_trigger = true,
+					keymap = {
+						accept = "<C-g>", -- Ctrl-g -> accept suggestion (like your Codeium mapping)
+						accept_word = false, -- optional: enable if you want "accept next word"
+						accept_line = false, -- optional: enable if you want "accept line"
+						next = "<C-;>", -- Ctrl-; -> cycle next suggestion
+						prev = "<C-,>", -- Ctrl-, -> cycle previous suggestion
+						dismiss = "<C-]>", -- optional: dismiss suggestion
+					},
+				},
+				panel = { enabled = false },
+			})
+		end,
+	},
+	{
+		"zbirenbaum/copilot-cmp",
+		event = "InsertEnter",
+		dependencies = { "zbirenbaum/copilot.lua" },
+		config = function()
+			require("copilot_cmp").setup()
 		end,
 	},
 	{
@@ -75,8 +87,8 @@ return {
 					end, { "i", "s" }),
 				}),
 				sources = cmp.config.sources({
+					{ name = "copilot" },
 					{ name = "nvim_lsp" },
-					{ name = "codeium" },
 					{ name = "luasnip" }, -- For luasnip users.
 				}, {
 					{ name = "buffer" },
