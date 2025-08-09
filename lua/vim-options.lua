@@ -35,6 +35,12 @@ vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 
 vim.keymap.set("n", "<leader>h", ":nohlsearch<CR>")
 vim.keymap.set("i", "jk", "<ESC>", {})
+vim.keymap.set(
+	"n",
+	"<leader>nt",
+	":set relativenumber!<CR>",
+	{ noremap = true, silent = true, desc = "Toggle relative number" }
+)
 vim.wo.number = true
 
 -- Key mappings for debugging (optional)
@@ -44,7 +50,7 @@ vim.api.nvim_set_keymap("n", "<F11>", '<cmd>lua require("dap").step_into()<CR>',
 vim.api.nvim_set_keymap("n", "<F12>", '<cmd>lua require("dap").step_out()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap(
 	"n",
-	"<leader>b",
+	"<leader>tb",
 	'<cmd>lua require("dap").toggle_breakpoint()<CR>',
 	{ noremap = true, silent = true }
 )

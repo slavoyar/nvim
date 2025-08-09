@@ -6,28 +6,35 @@ return {
 
 		wk.add({
 			{ "<leader>a", group = "CopilotChat" },
-			{ "<leader>a?", "<cmd>CopilotChatModels<cr>", desc = "Select models" },
-			{ "<leader>aR", "<cmd>CopilotChatRefactor<cr>", desc = "Refactor code" },
-			{ "<leader>aT", "<cmd>CopilotChatToggle<cr>", desc = "Toggle Copilot Chat" },
+
+			{ "<leader>f", group = "Telescope" },
+			{ "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>", desc = "Find files" },
+			{ "<leader>fg", "<cmd>lua require('telescope.builtin').live_grep()<cr>", desc = "Live grep" },
+			{ "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<cr>", desc = "List buffers" },
+			{ "<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<cr>", desc = "Help tags" },
+
+			{ "<leader>g", group = "Git" },
+			{ "<leader>lg", "<cmd>LazyGit<cr>", desc = "Open LazyGit" },
+			{ "<leader>gp", "<cmd>Gitsigns preview_hunk<cr>", desc = "Preview Git hunk" },
+			{ "<leader>gb", "<cmd>Gitsigns toggle_current_line_blame<cr>", desc = "Toggle blame" },
+			{ "<leader>i", "<cmd>lua vim.diagnostic.open_float()<CR>", desc = "Show diagnostics" },
+
+			{ "<leader>t", group = "Testing" },
+			{ "<leader>tt", ":lua require('neotest').run.run()<CR>", desc = "Run test" },
 			{
-				"<leader>ac",
-				function()
-					local input = vim.fn.input("Ask Copilot: ")
-					if input ~= "" then
-						vim.cmd("CopilotChat " .. input)
-					end
-				end,
-				desc = "Ask input",
+				"<leader>tf",
+				":lua require('neotest').run.run(vim.fn.expand('%'))<CR>",
+				desc = "Run file tests",
 			},
-			{ "<leader>ae", "<cmd>CopilotChatExplain<cr>", desc = "Explain code" },
-			{ "<leader>af", "<cmd>CopilotChatFixError<cr>", desc = "Fix diagnostic" },
-			{ "<leader>al", "<cmd>CopilotChatReset<cr>", desc = "Clear buffer & history" },
-			{ "<leader>am", "<cmd>CopilotChatCommit<cr>", desc = "Generate commit message" },
-			{ "<leader>an", "<cmd>CopilotChatBetterNamings<cr>", desc = "Better naming" },
-			{ "<leader>ar", "<cmd>CopilotChatReview<cr>", desc = "Review code" },
-			{ "<leader>at", "<cmd>CopilotChatTests<cr>", desc = "Generate tests" },
-			{ "<leader>ai", ":CopilotChatInline", mode = "x", desc = "Inline chat" },
-			{ "<leader>av", ":CopilotChatVisual", mode = "x", desc = "Open in vertical split" },
+			{
+				"<leader>td",
+				":lua require('neotest').run.run({strategy = 'dap'})<CR>",
+				desc = "Debug test",
+			},
+			{
+				"<leader>tb",
+				'<cmd>lua require("dap").toggle_breakpoint()<CR>',
+			},
 		})
 	end,
 }

@@ -101,11 +101,10 @@ return {
 		event = "VeryLazy",
 		keys = {
 			-- Code related commands
-			{ "<leader>ae", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
-			{ "<leader>at", "<cmd>CopilotChatTests<cr>", desc = "CopilotChat - Generate tests" },
-			{ "<leader>ar", "<cmd>CopilotChatReview<cr>", desc = "CopilotChat - Review code" },
-			{ "<leader>aR", "<cmd>CopilotChatRefactor<cr>", desc = "CopilotChat - Refactor code" },
-			{ "<leader>an", "<cmd>CopilotChatBetterNamings<cr>", desc = "CopilotChat - Better Naming" },
+			{ "<leader>ae", "<cmd>CopilotChatExplain #buffer<cr>", desc = "CopilotChat - Explain code" },
+			{ "<leader>at", "<cmd>CopilotChatTests #buffer<cr>", desc = "CopilotChat - Generate tests" },
+			{ "<leader>ar", "<cmd>CopilotChatReview #buffer<cr>", desc = "CopilotChat - Review code" },
+			{ "<leader>an", "<cmd>CopilotChatBetterNamings #buffer<cr>", desc = "CopilotChat - Better Naming" },
 			-- Chat with Copilot in visual mode
 			{
 				"<leader>av",
@@ -136,10 +135,6 @@ return {
 				"<cmd>CopilotChatCommit<cr>",
 				desc = "CopilotChat - Generate commit message for all changes",
 			},
-			-- Fix the issue with diagnostic
-			{ "<leader>af", "<cmd>CopilotChatFixError<cr>", desc = "CopilotChat - Fix Diagnostic" },
-			-- Clear buffer and chat history
-			{ "<leader>al", "<cmd>CopilotChatReset<cr>", desc = "CopilotChat - Clear buffer and chat history" },
 			-- Toggle Copilot Chat Vsplit
 			{ "<leader>av", "<cmd>CopilotChatToggle<cr>", desc = "CopilotChat - Toggle" },
 			-- Copilot Chat Models

@@ -50,7 +50,7 @@ return {
 				capabilities = capabilities,
 				filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
 				root_dir = function(bufnr)
-					return require("lspconfig.util").find_git_ancestor(vim.api.nvim_buf_get_name(bufnr))
+					return require("lspconfig.util").find_git_ancestor(bufnr)
 				end,
 			})
 

@@ -27,6 +27,7 @@ return {
 			"arsham/arshlib.nvim",
 			"famiu/feline.nvim",
 			"rebelot/heirline.nvim",
+			"echasnovski/mini.icons",
 			"kyazdani42/nvim-web-devicons",
 		},
 		config = function()
